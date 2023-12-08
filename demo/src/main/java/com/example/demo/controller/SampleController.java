@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-//import com.example.demo.dto.SampleDTO;
+import com.example.demo.dto.SampleDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +24,8 @@ public class SampleController {
         log.info("ex1.............");
     }
     
-    /*
-    @GetMapping({"/exLink"})
+    
+    @GetMapping({"/ex2", "/exLink"})
     public void exModel(Model model){
 
         List<SampleDTO> list = IntStream.rangeClosed(1, 20).asLongStream().mapToObj(
@@ -40,9 +40,7 @@ public class SampleController {
                 }).collect(Collectors.toList());
         model.addAttribute("list", list);
     } // public void exModel(Model model) end
-    */
-
-    /*
+    
     @GetMapping({"/exInline"})
     public String exInline(RedirectAttributes redirectAttributes){
         log.info("exInLine..........");
@@ -59,6 +57,6 @@ public class SampleController {
 
         return "redirect:/sample/ex3";
     } // public String exInline()
-    */
+    
     
 } // public class SampleController end
