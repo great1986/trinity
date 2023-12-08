@@ -6,7 +6,7 @@
 </head>
 <body>
 	<ul>
-       <li th:each="dto, state : ${list}">
+       <li th:each="dto, state : ${list}" th:if="${dto.sno%5 == 0}">
             [[${state.index}]] --- [[${dto}]]
        </li>"
     </ul>
