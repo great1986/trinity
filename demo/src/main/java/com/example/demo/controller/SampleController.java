@@ -58,5 +58,9 @@ public class SampleController {
         return "redirect:/sample/ex3";
     } // public String exInline()
     
+    @GetMapping({"/exLayout1", "/exLayout2", "/exTemplate", "/exSidebar"})
+    public void exLayout1() {
+    	log.info("exLayout.............");
+    }  //public void exLayout1() ends
     
 } // public class SampleController end
