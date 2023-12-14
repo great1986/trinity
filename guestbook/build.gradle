@@ -9,7 +9,6 @@ plugins {
 	id 'war'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
-	id 'com.ewerk.gradle.plugins.querydsl' version'1.0.10'
 }
 
 group = 'com.example'
@@ -56,16 +55,16 @@ tasks.named('test') {
  * QueryDSL Build Options
  * 
  */
-def querydslDir = "src/main/generated"
+def querydslSrcDir = 'src/main/generated'
 
+clean {
 
-sourceSets {
-	main {
-		java {
-			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated", querydslDir]
-		}
-	}
+	delete file(querydslSrcDir)
+
 }
 
+tasks.withType(JavaCompile) {
 
-compileJava.dependsOn('clean')
+	options.generatedSourceOutputDirectory = file(querydslSrcDir)
+
+}
