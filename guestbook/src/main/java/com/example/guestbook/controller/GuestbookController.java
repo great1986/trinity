@@ -50,11 +50,38 @@ public class GuestbookController {
         return "redirect:/guestbook/list";
     } // end of registerPost()
 
-    @GetMapping("/read")
+    @GetMapping({"/read", "/modify"})
     public void read(long gno, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model){
         log.info("gno: " + gno);
         GuestbookDTO dto = service.read(gno);
         model.addAttribute("dto", dto);
     } // end of read()
 
+    @PostMapping("/modify")
+    public String modify(GuestbookDTO dto, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, RedirectAttributes redirectAttributes){
+        log.info("post modify..............................");
+        log.info("modify dto: " + dto);
+
+        service.modify(dto);
+
+        redirectAttributes.addAttribute("page", requestDTO.getPage());
+        redirectAttributes.addAttribute("type", requestDTO.getType());
+        redirectAttributes.addAttribute("keyword", requestDTO.getKeyword());
+        redirectAttributes.addAttribute("gno", dto.getGno());
+
+        return "redirect:/guestbook/read";
+    } // end of modify()
+
+    @PostMapping("/remove")
+    public String remove(Long gno, RedirectAttributes redirectAttributes){
+        log.info("remove gno: " + gno);
+        service.remove(gno);
+
+        // 글 등록 후에, list로 돌아갈 때
+        // 글이 등록됐다는 알림창(modal)을 띄워준다.
+        // modal이 띄워지는 조건을 교재에서는 list.html에 삽입했으나
+        // 나는 js파일로 나누고 싶어서 입력 안했다.
+        redirectAttributes.addFlashAttribute("msg", gno);
+        return "redirect:/guestbook/list";
+    } // end of remove()
 } // public class GuestbookController ends

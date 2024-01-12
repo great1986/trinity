@@ -17,6 +17,8 @@ public class PageRequestDTO {
      */
     private int page;
     private int size;
+    private String type;
+    private String keyword;
 
     /***
      * 페이지가 1부터 시작하고
