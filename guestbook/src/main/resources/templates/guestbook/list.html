@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script th:src="@{../../js/guestbook_list.js}"></script>
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
     <th:block th:fragment="content">
         <h1 class="mt-4">GuestBook List Page</h1>
@@ -8,6 +9,34 @@
                 <button type="button" class="btn btn-outline-primary">Register</button>
             </a>
         </span>
+
+        <!-- 검색 -->
+        <form action="/guestbook/list" method="get" id="searchForm">
+            <div class="input-group">
+                <!-- input page value =1의 의미
+                 search버튼을 누르든, clear버튼을 누르든
+                 새롭게 부른 게시글 목록의 1페이지가 출력되도록 한다.-->
+                <input type="hidden" name="page" value="1">
+
+                <div class="input-group-prepend">
+                    <select class="custom-select" name="type">
+                        <option th:selected="${pageRequestDTO.type == null}">-----</option>
+                        <option value="t" th:selected="${pageRequestDTO.type == 't'}">title</option>
+                        <option value="c" th:selected="${pageRequestDTO.type == 'c'}">content</option>
+                        <option value="w" th:selected="${pageRequestDTO.type == 'w'}">writer</option>
+                        <option value="tc" th:selected="${pageRequestDTO.type == 'tc'}">title + content</option>
+                        <option value="tcw" th:selected="${pageRequestDTO.type == 'tcw'}">title + content + writer</option>
+                    </select>
+                </div>
+                <input class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+                <div class="input-group-append" id="button-addon4">
+                    <button class="btn btn-outline-secondary btn-search" type="button">Search</button>
+                    <button class="btn btn-outline-secondary btn-clear" type="button">Clear</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- 게시글 목록 -->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -20,7 +49,7 @@
             <tbody>
                 <tr th:each="dto: ${result.dtoList}">
                     <th scope="row">
-                        <a th:href="@{/guestbook/read(gno = ${dto.gno}, page= ${result.page})}">[[${dto.gno}]]</a>
+                        <a th:href="@{/guestbook/read(gno = ${dto.gno}, page= ${result.page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">[[${dto.gno}]]</a>
                     </th>
                     <td>[[${dto.title}]]</td>
                     <td>[[${dto.writer}]]</td>
@@ -28,19 +57,23 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- 페이지 이동 버튼 -->
         <ul class="pagination h-100 justify-content-center align-items-center">
             <li class="page-item" th:if="${result.prev}">
-                <a class="page-link" th:href="@{/guestbook/list(page= ${result.start -1})}" tabindex="-1">Prev</a>
+                <a class="page-link" th:href="@{/guestbook/list(page=${result.start -1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" tabindex="-1">Prev</a>
             </li>
 
             <li th:class="'page-item' + ${result.page == page? 'active':''}" th:each="page: ${result.pageList}">
-                <a class="page-link" th:href="@{/guestbook/list(page=${page})}">[[${page}]]</a>
+                <a class="page-link" th:href="@{/guestbook/list(page=${page}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">[[${page}]]</a>
             </li>
 
             <li class="page-item" th:if="${result.next}">
-                <a class="page-link" th:href="@{/guestbook/list(page = ${result.end +1})}">Next</a>
+                <a class="page-link" th:href="@{/guestbook/list(page = ${result.end +1}, type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">Next</a>
             </li>
         </ul>
+
+        <!-- 게시글 등록 후 게시글목록으로 돌아갈 때 출력되는 창 -->
         <div class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
